@@ -2578,11 +2578,15 @@ sub handle_targets ()
                              'lib', 'pkglib', 'noinst', 'check');
   @ltliblist = am_install_var ('ltlib', 'LTLIBRARIES',
 			       'noinst', 'lib', 'pkglib', 'check');
+  #因为模块目前暂时不具备任何跨编译器，甚至跨版本都不行，所以第一版就暂时只设置为仅构建不安装吧。
+  @modlist = am_install_var ('mods', 'MODULES',
+                            'noinst', 'check');
+
 
   # Record duplicates that may arise after canonicalization of the
   # base names, in order to prevent object file clashes in the presence
   # of target-specific *FLAGS
-  my @targetlist = (@proglist, @liblist, @ltliblist);
+  my @targetlist = (@proglist, @liblist, @ltliblist,@modlist);
   foreach my $pair (@targetlist)
     {
       my $base = canonicalize (basename (@$pair[1]));
