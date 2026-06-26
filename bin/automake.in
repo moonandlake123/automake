@@ -2680,6 +2680,119 @@ sub handle_programs ()
     }
 }
 
+sub handle_modules ()
+{
+  return if ! @modlist;
+  $must_handle_compiled_objects = 1;
+
+  my @prefix = am_primary_prefixes ('MODULES', 0, 
+				    'noinst', 'check');
+
+  if (@prefix)
+    {
+      my $var = rvar ($prefix[0] . '_MODULES');
+      $var->requires_variables ('module used', 'RANLIB');
+    }
+
+
+  define_variable ('AR', 'ar', INTERNAL);
+  define_variable ('ARFLAGS', 'cr', INTERNAL);
+  define_verbose_tagvar ('AR');
+
+  foreach my $pair (@modlist)
+    {
+      my ($where, $onelib) = @$pair;
+
+      my $seen_libobjs = 0;
+      # Check that the library fits the standard naming convention.
+      my $bn = basename ($onelib);
+      if ($bn !~ /^lib.*\.a$/)
+	{
+	  $bn =~ s/^(?:lib)?(.*?)(?:\.[^.]*)?$/lib$1.a/;
+	  my $suggestion = dirname ($onelib) . "/$bn";
+	  $suggestion =~ s|^\./||g;
+	  msg ('error-gnu/warn', $where,
+	       "'$onelib' is not a standard library name\n"
+	       . "did you mean '$suggestion'?")
+	}
+
+      ($known_libraries{$onelib} = $bn) =~ s/\.a$//;
+
+      $where->push_context ("while processing module '$onelib'");
+      $where->set (INTERNAL->get);
+
+      my $obj = '.$(OBJEXT)';
+
+      # Canonicalize names and check for misspellings.
+      my $xmod = check_canonical_spelling ($onelib, '_LIBADD', '_SOURCES',
+                                           '_OBJECTS', '_DEPENDENCIES',
+                                           '_AR', '_RANLIB');
+
+      if (! var ($xmod . '_AR'))
+	{
+	  define_variable ($xmod . '_AR', '$(AR) $(ARFLAGS)', $where);
+	}
+      if (! var ($xmod . '_RANLIB'))
+	{
+	  define_variable ($xmod . '_RANLIB', '$(RANLIB)', $where);
+	}
+
+      # Generate support for conditional object inclusion in
+      # libraries.
+      if (var ($xmod . '_LIBADD'))
+	{
+	  if (handle_lib_objects ($xmod, $xmod . '_LIBADD'))
+	    {
+	      $seen_libobjs = 1;
+	    }
+	}
+      else
+	{
+	  define_variable ($xmod . "_LIBADD", '', $where);
+	}
+
+      reject_var ($xmod . '_LDADD',
+		  "use '${xmod}_LIBADD', not '${xmod}_LDADD'");
+
+      # Make sure we at look at this.
+      set_seen ($xmod . '_DEPENDENCIES');
+      set_seen ('EXTRA_' . $xmod . '_DEPENDENCIES');
+
+      handle_source_transform ($xmod, $onelib, $obj, $where,
+                               NONLIBTOOL => 1, LIBTOOL => 0);
+
+      # If the resulting library lies in a subdirectory,
+      # make sure this directory will exist.
+      my $dirstamp = require_build_directory_maybe ($onelib);
+      my $verbose = verbose_flag ('AR');
+      my $silent = silent_flag ();
+
+      $output_rules .= file_contents ('module',
+                                       $where,
+                                       VERBOSE  => $verbose,
+                                       SILENT   => $silent,
+                                       MODULE  => $onelib,
+                                       XMODULE => $xmod,
+                                       DIRSTAMP => $dirstamp);
+
+      if ($seen_libobjs)
+	{
+	  if (var ($xmod . '_LIBADD'))
+	    {
+	      check_libobjs_sources ($xmod, $xmod . '_LIBADD');
+	    }
+	}
+
+      if (! $seen_ar)
+	{
+	  msg ('extra-portability', $where,
+	       "'$onelib': linking libraries using a non-POSIX\n"
+	       . "archiver requires 'AM_PROG_AR' in '$configure_ac'")
+	}
+    }
+}
+
+
 
 sub handle_libraries ()
 {
