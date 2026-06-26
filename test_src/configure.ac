@@ -1,0 +1,22 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ([2.73])
+AC_INIT([test], [0.0.1], [BUG-REPORT-ADDRESS])
+AM_INIT_AUTOMAKE([foreign])
+AC_PROG_CXX
+AC_PROG_RANLIB
+AM_PROG_AR
+AC_CONFIG_SRCDIR([test.cpp])
+AC_CONFIG_SRCDIR([hello.cppm])
+# Checks for programs.
+
+# Checks for libraries.
+
+# Checks for header files.
+
+# Checks for typedefs, structures, and compiler characteristics.
+
+# Checks for library functions.
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT

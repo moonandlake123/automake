@@ -42,6 +42,8 @@ dist_am_DATA = \
   %D%/lex.am \
   %D%/library.am \
   %D%/libs.am \
+  %D%/module.am \
+  %D%/mods.am \
   %D%/libtool.am \
   %D%/lisp.am \
   %D%/ltlib.am \
