@@ -100,6 +100,7 @@ sub handle_languages ();
 sub handle_libraries ();
 sub handle_libtool ();
 sub handle_ltlibraries ();
+sub handle_modules ();
 sub handle_makefiles_serial ();
 sub handle_man_pages ();
 sub handle_minor_options ();
@@ -528,6 +529,7 @@ my @dist_targets;
 my @proglist;
 my @liblist;
 my @ltliblist;
+my @modlist;
 # Blacklist of targets (as canonical base name) for which object file names
 # may not be automatically shortened
 my @dup_shortnames;
@@ -8187,6 +8189,7 @@ sub generate_makefile
   handle_libraries;
   handle_ltlibraries;
   handle_programs;
+  handle_modules;
   handle_scripts;
 
   handle_silent;
