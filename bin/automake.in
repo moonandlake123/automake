@@ -2793,7 +2793,7 @@ sub handle_modules ()
       my $dirstamp = require_build_directory_maybe ($onelib);
       my $verbose = verbose_flag ('AR');
       my $silent = silent_flag ();
-      handle_import_deps($xname,$where);
+      handle_import_deps($xmod,$where);
       $output_rules .= file_contents ('module',
                                        $where,
                                        VERBOSE  => $verbose,
@@ -2907,7 +2907,7 @@ sub handle_libraries ()
       my $dirstamp = require_build_directory_maybe ($onelib);
       my $verbose = verbose_flag ('AR');
       my $silent = silent_flag ();
-      handle_import_deps($xname,$where);
+      handle_import_deps($xlib,$where);
       $output_rules .= file_contents ('library',
                                        $where,
                                        VERBOSE  => $verbose,
@@ -3149,7 +3149,7 @@ sub handle_ltlibraries ()
       # Remember to cleanup .libs/ in this directory.
       my $dirname = dirname $onelib;
       $libtool_clean_directories{$dirname} = 1;
-      handle_import_deps($xname,$where);
+      handle_import_deps($xlib,$where);
       $output_rules .= file_contents ('ltlibrary',
                                       $where,
                                       LTLIBRARY  => $onelib,
