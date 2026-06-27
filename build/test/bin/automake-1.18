@@ -1,6 +1,6 @@
-#!@PERL@
+#!/usr/bin/perl
 # automake - create Makefile.in from Makefile.am            -*- perl -*-
-# @configure_input@
+# Generated from bin/automake.in; do not edit by hand.
 # Copyright (C) 1994-2025 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
@@ -26,7 +26,7 @@ use 5.006; use strict; use warnings;
 
 BEGIN
 {
-  unshift (@INC, '@datadir@/@PACKAGE@-@APIVERSION@')
+  unshift (@INC, '/home/22082/automake-1.18.1/build/test/share/automake-1.18')
     unless $ENV{AUTOMAKE_UNINSTALLED};
 
   # Override SHELL.  This is required on DJGPP so that system() uses
@@ -36,7 +36,7 @@ BEGIN
   # it turns up other systems need the same thing.  After all,
   # if SHELL is used, ./configure's SHELL is always better than
   # the user's SHELL (which may be something like tcsh).
-  $ENV{'SHELL'} = '@SHELL@' if exists $ENV{'DJDIR'};
+  $ENV{'SHELL'} = '/bin/sh' if exists $ENV{'DJDIR'};
 }
 
 use Carp;
@@ -2295,7 +2295,7 @@ sub handle_lib_objects
   my $seen_libobjs = 0;
   my $flagvar = 0;
 
-  transform_variable_recursively #在依赖处理中非常关键的函数调用，其决定了对于这个变量的一个展开，这里应该是只可以影响链接顺序。
+  transform_variable_recursively
     ($varname, $xname . '_DEPENDENCIES', 'am__DEPENDENCIES',
      ! $xname, INTERNAL,
      # Transformation function, run on each filename.
@@ -2354,29 +2354,6 @@ sub handle_lib_objects
 
   return $seen_libobjs;
 }
-
-sub handle_import_deps
-{
-    my ($xname, $where) = @_;
-    my $var = var ($xname . '_IMPORT');
-    return 0 unless $var;
-
-    # 过滤 -lfoo, -Ldir 等，只保留文件
-    my @imports = grep { !/^-/ } $var->value_as_list_recursive;
-    return 0 unless @imports;
-
-    # 1. 定义 *_IMPORT_DEPS 变量，只含文件，用于 target 依赖行
-    define_pretty_variable ($xname . '_IMPORT_DEPS', TRUE, $where, @imports);
-
-    # 2. 直接往 $output_rules 写入编译顺序依赖
-    my $objects = '$(' . $xname . '_OBJECTS)';
-    foreach my $dep (@imports)
-    {
-        $output_rules .= "$objects: $dep\n";
-    }
-    return 1;
-}
-
 
 # handle_LIBOBJS_or_ALLOCA ($VAR, $BASE)
 # --------------------------------------
@@ -2640,7 +2617,7 @@ sub handle_programs ()
       # Canonicalize names and check for misspellings.
       my $xname = check_canonical_spelling ($one_file, '_LDADD', '_LDFLAGS',
                                             '_SOURCES', '_OBJECTS',
-                                            '_DEPENDENCIES','_IMPORT');
+                                            '_DEPENDENCIES');
 
       $where->push_context ("while processing program '$one_file'");
       $where->set (INTERNAL->get);
@@ -2671,8 +2648,7 @@ sub handle_programs ()
       set_seen ($xname . '_DEPENDENCIES');
       set_seen ('EXTRA_' . $xname . '_DEPENDENCIES');
       set_seen ($xname . '_LDFLAGS');
-      set_seen ($xname . '_IMPORT');
-      set_seen ('EXTRA_' . $xname . '_IMPORT');
+
       # Determine program to use for link.
       my($xlink, $vlink) = define_per_target_linker_variable ($linker, $xname);
       $vlink = verbose_flag ($vlink || 'GEN');
@@ -2682,7 +2658,7 @@ sub handle_programs ()
       my $dirstamp = require_build_directory_maybe ($one_file);
 
       $libtool_clean_directories{dirname ($one_file)} = 1;
-      handle_import_deps($xname,$where);
+
       $output_rules .= file_contents ('program',
                                       $where,
                                       PROGRAM  => $one_file,
@@ -2738,7 +2714,7 @@ sub handle_modules ()
 	  my $suggestion = dirname ($onelib) . "/$bn";
 	  $suggestion =~ s|^\./||g;
 	  msg ('error-gnu/warn', $where,
-	       "'$onelib' is not a standard module name\n"
+	       "'$onelib' is not a standard library name\n"
 	       . "did you mean '$suggestion'?")
 	}
 
@@ -2752,7 +2728,7 @@ sub handle_modules ()
       # Canonicalize names and check for misspellings.
       my $xmod = check_canonical_spelling ($onelib, '_LIBADD', '_SOURCES',
                                            '_OBJECTS', '_DEPENDENCIES',
-                                           '_AR', '_RANLIB','_IMPORT');
+                                           '_AR', '_RANLIB');
 
       if (! var ($xmod . '_AR'))
 	{
@@ -2783,8 +2759,7 @@ sub handle_modules ()
       # Make sure we at look at this.
       set_seen ($xmod . '_DEPENDENCIES');
       set_seen ('EXTRA_' . $xmod . '_DEPENDENCIES');
-      set_seen ($xmod . '_IMPORT');
-      set_seen ('EXTRA_' . $xmod . '_IMPORT');
+
       handle_source_transform ($xmod, $onelib, $obj, $where,
                                NONLIBTOOL => 1, LIBTOOL => 0);
 
@@ -2793,7 +2768,7 @@ sub handle_modules ()
       my $dirstamp = require_build_directory_maybe ($onelib);
       my $verbose = verbose_flag ('AR');
       my $silent = silent_flag ();
-      handle_import_deps($xname,$where);
+
       $output_rules .= file_contents ('module',
                                        $where,
                                        VERBOSE  => $verbose,
@@ -2866,7 +2841,7 @@ sub handle_libraries ()
       # Canonicalize names and check for misspellings.
       my $xlib = check_canonical_spelling ($onelib, '_LIBADD', '_SOURCES',
                                            '_OBJECTS', '_DEPENDENCIES',
-                                           '_AR', '_RANLIB','_IMPORT');
+                                           '_AR', '_RANLIB');
 
       if (! var ($xlib . '_AR'))
 	{
@@ -2897,8 +2872,7 @@ sub handle_libraries ()
       # Make sure we at look at this.
       set_seen ($xlib . '_DEPENDENCIES');
       set_seen ('EXTRA_' . $xlib . '_DEPENDENCIES');
-      set_seen ($xlib . '_IMPORT');
-      set_seen ('EXTRA_' . $xlib . '_IMPORT');
+
       handle_source_transform ($xlib, $onelib, $obj, $where,
                                NONLIBTOOL => 1, LIBTOOL => 0);
 
@@ -2907,7 +2881,7 @@ sub handle_libraries ()
       my $dirstamp = require_build_directory_maybe ($onelib);
       my $verbose = verbose_flag ('AR');
       my $silent = silent_flag ();
-      handle_import_deps($xname,$where);
+
       $output_rules .= file_contents ('library',
                                        $where,
                                        VERBOSE  => $verbose,
@@ -3039,7 +3013,7 @@ sub handle_ltlibraries ()
       # Canonicalize names and check for misspellings.
       my $xlib = check_canonical_spelling ($onelib, '_LIBADD', '_LDFLAGS',
                                            '_SOURCES', '_OBJECTS',
-                                           '_DEPENDENCIES','_IMPORT');
+                                           '_DEPENDENCIES');
 
       # Check that the library fits the standard naming convention.
       my $libname_rx = '^lib.*\.la';
@@ -3081,8 +3055,7 @@ sub handle_ltlibraries ()
       set_seen ($xlib . '_LDFLAGS');
       set_seen ($xlib . '_DEPENDENCIES');
       set_seen ('EXTRA_' . $xlib . '_DEPENDENCIES');
-      set_seen ($xlib . '_IMPORT');
-      set_seen ('EXTRA_' . $xlib . '_IMPORT');
+
       # Generate support for conditional object inclusion in
       # libraries.
       if (var ($xlib . '_LIBADD'))
@@ -3149,7 +3122,7 @@ sub handle_ltlibraries ()
       # Remember to cleanup .libs/ in this directory.
       my $dirname = dirname $onelib;
       $libtool_clean_directories{$dirname} = 1;
-      handle_import_deps($xname,$where);
+
       $output_rules .= file_contents ('ltlibrary',
                                       $where,
                                       LTLIBRARY  => $onelib,
@@ -5475,7 +5448,7 @@ sub scan_autoconf_traces
   # and will see its warnings then.
   local $ENV{WARNINGS} = 'none';
 
-  my $traces = ($ENV{AUTOCONF} || '@am_AUTOCONF@') . " ";
+  my $traces = ($ENV{AUTOCONF} || 'autoconf') . " ";
 
   # Use a separator unlikely to be used, not ':', the default, which
   # has a precise meaning for AC_CONFIG_FILES and so on.
@@ -8435,8 +8408,8 @@ Library files:
     print_autodist_files @common_sometimes, 'README-alpha[.md]';
 
     print '
-Report bugs to <@PACKAGE_BUGREPORT@>.
-GNU Automake home page: <@PACKAGE_URL@>.
+Report bugs to <bug-automake@gnu.org>.
+GNU Automake home page: <https://www.gnu.org/software/automake/>.
 General help using GNU software: <https://www.gnu.org/gethelp/>.
 ';
 

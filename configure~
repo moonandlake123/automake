@@ -6675,33 +6675,7 @@ if ac_fn_fc_try_compile "$LINENO"
 then :
   ac_compiler_gnu=yes
 else case e in #(
-  e) cat > conftest.$ac_ext <<_ACEOF
-      program main
-#ifndef __flang__
-       choke me
-#endif
-
-      end
-_ACEOF
-if ac_fn_fc_try_compile "$LINENO"
-then :
-  case `$FC $FCFLAGS --print-target-triple < /dev/null 2>&1` in
-		      *mingw*|*-gnu)
-		        ac_compiler_gnu=yes
-		        ;;
-		      *-msvc)
-		        ac_compiler_gnu=no
-		        ;;
-		      *)
-		        ## assume Flang is GNU-compatible by default
-		        ac_compiler_gnu=yes
-		        ;;
-		    esac
-else case e in #(
   e) ac_compiler_gnu=no ;;
-esac
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext ;;
 esac
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
@@ -7219,33 +7193,7 @@ if ac_fn_f77_try_compile "$LINENO"
 then :
   ac_compiler_gnu=yes
 else case e in #(
-  e) cat > conftest.$ac_ext <<_ACEOF
-      program main
-#ifndef __flang__
-       choke me
-#endif
-
-      end
-_ACEOF
-if ac_fn_f77_try_compile "$LINENO"
-then :
-  case `$F77 $FFLAGS --print-target-triple < /dev/null 2>&1` in
-		      *mingw*|*-gnu)
-		        ac_compiler_gnu=yes
-		        ;;
-		      *-msvc)
-		        ac_compiler_gnu=no
-		        ;;
-		      *)
-		        ## assume Flang is GNU-compatible by default
-		        ac_compiler_gnu=yes
-		        ;;
-		    esac
-else case e in #(
   e) ac_compiler_gnu=no ;;
-esac
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext ;;
 esac
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext

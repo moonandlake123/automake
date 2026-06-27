@@ -1,0 +1,3 @@
+103: sub handle_modules ();
+2685: sub handle_modules ()
+8192:   handle_modules;
