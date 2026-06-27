@@ -1,5 +1,6 @@
 ## -*- makefile-automake -*-
 ## Copyright (C) 1995-2025 Free Software Foundation, Inc.
+## Copyright (C) 2026 ForeverLight
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by

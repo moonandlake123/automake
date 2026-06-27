@@ -4,9 +4,9 @@ AM_CXXFLAGS=-fmodules
 
 bin_PROGRAMS=test
 test_SOURCES = test.cpp
-test_LDADD = libmymod.a
+test_IMPORT = libhello.a
 
 # Makefile.am 示例
-noinst_MODULES = libmymod.a
-libmymod_a_SOURCES = hello.cppm
+noinst_MODULES = libhello.a
+libhello_a_SOURCES = hello.cppm
 

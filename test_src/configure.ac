@@ -8,7 +8,6 @@ AC_PROG_CXX
 AC_PROG_RANLIB
 AM_PROG_AR
 AC_CONFIG_SRCDIR([test.cpp])
-AC_CONFIG_SRCDIR([hello.cppm])
 # Checks for programs.
 
 # Checks for libraries.
