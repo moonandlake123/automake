@@ -724,7 +724,7 @@ register_language ('name' => 'cxx',
 		   'lder' => 'CXXLD',
 		   'ld' => '$(CXX)',
 		   'pure' => 1,
-		   'extensions' => ['.c++', '.cc', '.cpp', '.cxx', '.C']);
+		   'extensions' => ['.c++', '.cc', '.cpp', '.cxx', '.C','.cppm','ixx']);
 
 # Objective C.
 register_language ('name' => 'objc',
