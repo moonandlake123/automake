@@ -1,6 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 
 # Copyright (C) 1995-2025 Free Software Foundation, Inc.
+# Copyright (C) 2026 ForeverLight
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 AC_PREREQ([2.69])
-AC_INIT([GNU Automake], [1.18.1], [bug-automake@gnu.org])
+AC_INIT([GNU Automake], [1.18.2], [bug-automake@gnu.org])
 
 AC_CONFIG_SRCDIR([bin/automake.in])
 AC_CONFIG_AUX_DIR([lib])
