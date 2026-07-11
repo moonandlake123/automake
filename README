@@ -1,3 +1,8 @@
+这是一个Automake的非官方修改版本,添加了对于C++20的模块支持.
+目前来说(至少对于2026年7月11日而言)其改动较为简单与粗糙很可能有许多bug.
+
+下面是原来的README
+---
 This is Automake, a Makefile generator.  It aims to be portable and
 to conform to the GNU Coding Standards for Makefile variables and
 targets.
